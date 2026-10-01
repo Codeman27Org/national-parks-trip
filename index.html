@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Utah National Parks Road Trip – Model 3</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="stylesheet" href="trip-map.css">
+</head>
+<body>
+<aside id="sidebar">
+  <header>
+    <h1>Utah National Parks Road Trip</h1>
+    <p class="sub">Oct 5–9 · Grand Junction → Canyonlands → Capitol Reef → Bryce → Zion → Grand Junction · ~1,000 mi · Tesla Model 3 (~260 mi range)</p>
+    <div id="dayFilter"></div>
+    <p class="hint">Click a leg (in this list or on the map) to zoom to it. <b>Google Maps ↗</b> opens turn-by-turn directions for that leg. Battery % values are planning estimates – trust the car's trip planner on the day.</p>
+  </header>
+  <div id="legList"></div>
+  <footer>
+    <strong>Legend</strong>
+    <div class="legend" id="legend"></div>
+    <p>Route lines come from OpenStreetMap routing (OSRM) and are cached after the first load. Dashed lines = route still loading or offline.</p>
+  </footer>
+</aside>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="trip-map.js"></script>
+</body>
+</html>

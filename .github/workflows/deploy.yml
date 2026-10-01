@@ -1,0 +1,33 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # Skips cleanly until the AWS stack exists and the repo variables are set.
+    if: vars.SITE_BUCKET != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Set AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: us-east-2
+      - name: Deploy
+        run: sh deploy/deploy.sh
+        env:
+          SITE_BUCKET: ${{ vars.SITE_BUCKET }}
+          SITE_DISTRIBUTION_ID: ${{ vars.SITE_DISTRIBUTION_ID }}
