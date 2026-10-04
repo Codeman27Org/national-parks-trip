@@ -112,6 +112,41 @@ const LEGS = [
 ];
 
 // ---------- helpers ----------
+// key = PLACES entry the name links to (fly to marker); omitted for sights without a marker.
+const ATTRACTIONS = {
+  1: [
+    { time: '08:00–10:30', key: 'dewey', name: 'UT-128 River Road & Dewey Bridge', plan: 'Paved scenic drive along the Colorado River. Quick photo stops at the historic Dewey Bridge and the Fisher Towers pullouts.' },
+    { time: '11:15–12:15', key: 'isky_vc', name: 'Island in the Sky Visitor Center', plan: 'Park pass, maps, restrooms and water. Shafer Canyon Overlook is a short walk away and looks straight down the Shafer Trail switchbacks.' },
+    { time: '12:15–14:00', key: 'mesa_arch', name: 'Mesa Arch', plan: '0.7 mi loop to an arch perched right on the canyon rim. Easy and very popular, so expect some company.' },
+    { time: '14:00–16:30', key: 'grandview', name: 'Grand View Point Trail', plan: '~1.8 mi round trip along the rim to the tip of the mesa, with huge views over the White Rim and the river canyons.' },
+    { time: '16:30–19:00', key: 'gr_overlook', name: 'Green River Overlook (sunset)', plan: 'Sunset is around 6:55 PM. Arrive early for a spot on the rim, then it\'s ~40 min to Lone Mesa camp.' },
+  ],
+  2: [
+    { time: '11:30–11:45', name: 'Fruita Petroglyph Panel', plan: 'Short boardwalk along UT-24 with Fremont-era rock art. Easy stop on the way to Hickman Bridge.' },
+    { time: '11:45–13:15', key: 'hickman', name: 'Hickman Bridge Trail', plan: '~1.8 mi round trip with ~400 ft of climbing to a 133-ft natural sandstone bridge.' },
+    { time: '13:15–14:15', key: 'gifford', name: 'Fruita & Gifford Homestead', plan: 'Historic orchards and pioneer buildings. Buy fresh pies at the Gifford House; they often sell out by early afternoon.' },
+    { time: '14:15–15:00', key: 'capgorge', name: 'Capitol Reef Scenic Drive', plan: '8 mi paved plus ~2 mi of graded dirt to Capitol Gorge. Pull-offs along the Waterpocket Fold cliffs.' },
+    { time: '15:00–16:30', key: 'capgorge', name: 'Capitol Gorge Trail', plan: '~2 mi round trip, mostly flat, through a narrow canyon to the Pioneer Register (1880s signatures) and a short scramble up to the Tanks.' },
+    { time: '16:30–18:30', key: 'etta', name: 'Torrey – dinner & charge', plan: 'Dinner at Etta Place Cider while the car charges. Leave Torrey at 85%+ for tomorrow.' },
+  ],
+  3: [
+    { time: '08:15–09:00', key: 'boulder_ovl', name: 'Boulder Mountain overlooks', plan: 'Hwy 12 climbs to ~9,600 ft through aspen forest. Larb Hollow and the other overlooks look out over the Waterpocket Fold and the Henry Mountains.' },
+    { time: '09:30–09:50', key: 'hogback', name: 'The Hogback', plan: 'A narrow ridge-top stretch of road with drop-offs on both sides. Use the pullouts at either end for photos.' },
+    { time: '10:00–10:20', key: 'headrocks', name: 'Head of the Rocks Overlook', plan: 'Wide view over the slickrock canyons of Grand Staircase-Escalante.' },
+    { time: '11:00–11:45', key: 'mossy', name: 'Mossy Cave Trail', plan: '~0.8 mi round trip to a small waterfall and hoodoos at the park\'s north edge. The waterfall\'s flow is seasonal, so it may be low in October.' },
+    { time: '12:30–14:30', key: 'sunset_pt', name: 'Navajo Loop & Queens Garden', plan: '~2.9 mi loop from Sunset Point down among the hoodoos (Thor\'s Hammer, Queen Victoria) with ~600 ft to climb back out. Check NPS for Wall Street closures.' },
+    { time: '14:30–16:30', key: 'inspiration', name: 'Rim Trail: Inspiration, Sunset & Sunrise Points', plan: 'Walk the paved Rim Trail between the viewpoints. Inspiration Point has the widest view of the Bryce Amphitheater.' },
+  ],
+  4: [
+    { time: '09:30–10:00', key: 'checker', name: 'Checkerboard Mesa & slickrock pullouts', plan: 'Crosshatched sandstone right inside the East Entrance. Pull over at the slickrock shelves for photos.' },
+    { time: '10:00–11:30', key: 'canyon_ovl', name: 'Canyon Overlook Trail', plan: '1 mi round trip on ledges and a short boardwalk to a view down Pine Creek into Zion Canyon. The lot is tiny, so arrive early or use the nearby pullouts.' },
+    { time: '11:30–12:45', key: 'oscars', name: 'Mt. Carmel Tunnel & lunch in Springdale', plan: 'Drive the 1.1-mile tunnel and switchbacks down to Springdale. Lunch at Oscar\'s Cafe or Whiptail Grill.' },
+    { time: '12:45–15:15', key: 'zion_vc', name: 'Watchman Trail', plan: '~3.3 mi round trip with ~370 ft of climbing from the Visitor Center to a viewpoint of the Watchman and Springdale. No shuttle needed; park in town and use the free Springdale shuttle.' },
+  ],
+  5: [
+    { time: '11:45–13:50', name: 'San Rafael Swell (I-70)', plan: 'One of the most dramatic interstate drives in the West. Watch for the signed View Area exits for a stretch break; there are no services for ~106 mi.' },
+  ],
+};
 const gSearch = q => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
 const gQuery = key => { const p = PLACES[key]; return p.q || p.ll.join(','); };
 function gDir(stopKeys) {
@@ -283,7 +318,31 @@ for (const d of DAYS) {
     s.card = card;
     sec.append(card);
   }
+  const attractions = ATTRACTIONS[d.id] || [];
+  if (attractions.length) {
+    const items = attractions.map(a => {
+      const name = a.key ? el('button', { type: 'button', class: 'attr-name' }, a.name) : el('span', { class: 'attr-name' }, a.name);
+      if (a.key) name.addEventListener('click', () => focusPlace(a.key));
+      return el('li', {},
+        el('div', { class: 'attr-head' }, el('span', { class: 'attr-time' }, a.time), name, a.key ? extLink(placeUrl(PLACES[a.key]), 'Maps ↗', 'attr-link') : null),
+        el('div', { class: 'attr-plan' }, a.plan),
+      );
+    });
+    const box = el('details', { class: 'attractions' }, el('summary', {}, `🎯 Attractions & plan (${attractions.length})`), el('ol', { class: 'attr-list' }, ...items));
+    if (!matchMedia('(pointer: coarse)').matches) box.open = true;
+    sec.querySelector('.day-head').after(box);
+  }
   list.append(sec);
+}
+
+function focusPlace(key) {
+  const mk = markers.find(m => m.key === key);
+  if (!mk) return;
+  let opened = false;
+  const open = () => { if (!opened) { opened = true; mk.m.openPopup(); } };
+  map.once('moveend', open);
+  setTimeout(open, reduceMotion ? 50 : 1300);
+  if (reduceMotion) map.setView(mk.p.ll, 13); else map.flyTo(mk.p.ll, 13, { duration: 1 });
 }
 
 const legend = document.getElementById('legend');

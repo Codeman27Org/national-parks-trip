@@ -16,6 +16,18 @@ h1 { font-size: 18px; margin: 0 0 4px; }
 .day-head .meta { font-size: 12px; color: #666; }
 .day-link { font-size: 12px; white-space: nowrap; }
 .day-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 8px; font-size: 12px; color: #666; }
+.attractions { margin: 0 0 10px; background: #fffdf8; border: 1px solid #e3ddd3; border-radius: 8px; padding: 6px 10px; }
+.attractions summary { cursor: pointer; font-weight: 600; font-size: 13px; }
+.attr-list { list-style: none; margin: 6px 0 2px; padding: 0; }
+.attr-list li { padding: 6px 0; border-top: 1px dashed #e6e0d6; }
+.attr-list li:first-child { border-top: 0; }
+.attr-head { display: flex; gap: 6px; align-items: baseline; flex-wrap: wrap; }
+.attr-time { flex: none; min-width: 82px; font-size: 11.5px; color: #666; font-variant-numeric: tabular-nums; }
+.attr-name { font: inherit; font-size: 13px; font-weight: 600; color: #222; background: none; border: 0; padding: 0; text-align: left; }
+button.attr-name { color: #1558b0; cursor: pointer; }
+button.attr-name:hover { text-decoration: underline; }
+.attr-link { font-size: 12px; text-decoration: none; white-space: nowrap; }
+.attr-plan { font-size: 12.5px; color: #555; margin: 2px 0 0 88px; }
 .leg { background: #fff; border: 1px solid #e3ddd3; border-radius: 8px; padding: 8px 10px; margin: 0 0 8px; cursor: pointer; transition: box-shadow .15s, border-color .15s; }
 .leg:hover { box-shadow: 0 1px 6px rgba(0,0,0,.12); }
 .leg.active { border-color: #222; box-shadow: 0 2px 10px rgba(0,0,0,.2); }
@@ -55,4 +67,5 @@ footer { padding: 10px 16px 20px; font-size: 12px; color: #555; border-top: 1px 
   #dayFilter { gap: 4px; }
   #dayFilter button { padding: 3px 6px; }
   .day { padding: 8px 12px 2px; }
+  .attr-plan { margin-left: 0; }
 }
