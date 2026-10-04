@@ -124,6 +124,16 @@ function gDir(stopKeys) {
 }
 const placeUrl = p => p.url || gSearch(p.q || p.ll.join(','));
 
+// Google Maps allows only 3 waypoints per link on phones (9 elsewhere), so long days are split into parts there.
+const MAX_STOPS = matchMedia('(pointer: coarse)').matches ? 5 : 11;
+function chunkStops(stops) {
+  const hops = stops.length - 1;
+  const per = Math.ceil(hops / Math.ceil(hops / (MAX_STOPS - 1)));
+  const parts = [];
+  for (let i = 0; i < hops; i += per) parts.push(stops.slice(i, i + per + 1));
+  return parts;
+}
+
 function el(tag, attrs = {}, ...kids) {
   const n = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs)) {
@@ -251,10 +261,14 @@ for (const d of DAYS) {
   const legs = legState.filter(s => s.leg.day === d.id);
   const miles = legs.reduce((a, s) => a + s.leg.mi, 0);
   const dayStops = legs.flatMap((s, j) => (j === 0 ? s.leg.stops : s.leg.stops.slice(1)));
+  const parts = chunkStops(dayStops);
+  const dayLinks = parts.length === 1
+    ? el('div', { class: 'day-links' }, extLink(gDir(parts[0]), 'Whole day ↗', 'day-link'))
+    : el('div', { class: 'day-links' }, 'Whole day:', ...parts.map((p, k) => extLink(gDir(p), `Part ${k + 1} ↗`, 'day-link')));
   const sec = el('section', { class: 'day', 'data-day': String(d.id) },
     el('div', { class: 'day-head', style: `border-color:${d.color}` },
       el('div', {}, el('h2', {}, `Day ${d.id} · ${d.date}`), el('div', { class: 'meta' }, `${d.title} · ${miles} mi`)),
-      extLink(gDir(dayStops), 'Whole day ↗', 'day-link'),
+      dayLinks,
     ),
   );
   for (const s of legs) {

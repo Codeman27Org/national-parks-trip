@@ -15,6 +15,7 @@ h1 { font-size: 18px; margin: 0 0 4px; }
 .day-head h2 { font-size: 15px; margin: 0; }
 .day-head .meta { font-size: 12px; color: #666; }
 .day-link { font-size: 12px; white-space: nowrap; }
+.day-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 8px; font-size: 12px; color: #666; }
 .leg { background: #fff; border: 1px solid #e3ddd3; border-radius: 8px; padding: 8px 10px; margin: 0 0 8px; cursor: pointer; transition: box-shadow .15s, border-color .15s; }
 .leg:hover { box-shadow: 0 1px 6px rgba(0,0,0,.12); }
 .leg.active { border-color: #222; box-shadow: 0 2px 10px rgba(0,0,0,.2); }
